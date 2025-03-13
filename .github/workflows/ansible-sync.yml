@@ -68,7 +68,7 @@ jobs:
       #   if: ${{ success() }}
       #   run: |
       #     curl -X POST -H 'Content-type: application/json' \
-      #       --data '{"text":"✅ Ansible collections built and synced successfully."}' \
+      #       --data '{"text":"Ansible collections built and synced successfully."}' \
       #       ${{ secrets.SLACK_WEBHOOK_URL }}
 
       # # Notify via Slack on Failure
@@ -76,5 +76,5 @@ jobs:
       #   if: ${{ failure() }}
       #   run: |
       #     curl -X POST -H 'Content-type: application/json' \
-      #       --data '{"text":"❌ Ansible collection build or sync failed."}' \
+      #       --data '{"text":"Ansible collection build or sync failed."}' \
       #       ${{ secrets.SLACK_WEBHOOK_URL }}
