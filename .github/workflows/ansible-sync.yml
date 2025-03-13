@@ -1,0 +1,80 @@
+name: Monthly Ansible Collection Sync
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Runs at midnight on the 1st of each month
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  sync-ansible-collections:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures full commit history is available
+
+      - name: Install Python3, pip, and Ansible Core
+        run: |
+          sudo apt-get update && sudo apt-get install -y python3 python3-pip
+          pip3 install ansible-core
+
+      - name: Build and Publish Collections
+        run: |
+          git fetch origin master 
+          
+          # Get a list of changed collections
+          CHANGED_COLLECTIONS=$(git diff --name-only HEAD~1 HEAD | grep "^namespaces/" | cut -d'/' -f2,3 | sort -u)
+          
+          if [ -z "$CHANGED_COLLECTIONS" ]; then
+            echo "✅ No collections have changed. Skipping build and publish."
+            exit 0
+          fi
+          
+          # Iterate over each changed collection
+          for collection in $CHANGED_COLLECTIONS; do
+            namespace=$(echo "$collection" | cut -d'/' -f1)
+            collection_name=$(echo "$collection" | cut -d'/' -f2)
+          
+            # Skip if not a valid directory
+            if [ ! -d "namespaces/$namespace/$collection_name" ]; then
+              continue
+            fi
+          
+            echo "🚀 Processing changed collection: $namespace/$collection_name"
+          
+            # Build the collection
+            ansible-galaxy collection build "namespaces/$namespace/$collection_name" --output-path "namespaces/$namespace/$collection_name" --force
+          
+            # Find the generated tar file
+            TAR_FILE=$(find "namespaces/$namespace/$collection_name" -maxdepth 1 -name '*.tar.gz' | head -n 1)
+          
+            if [ -f "$TAR_FILE" ]; then
+              echo "📡 Publishing $TAR_FILE"
+              ansible-galaxy collection publish "$TAR_FILE" \
+                --server https://platform.cus-l3n9so.aws.ansiblecloud.redhat.com/api/galaxy/ \
+                --api-key ${{ secrets.PAH_API_KEY }}
+            else
+              echo "❌ ERROR: No .tar.gz file found for $namespace/$collection_name"
+              exit 1
+            fi
+          done
+
+
+
+      # # Notify via Slack on Success
+      # - name: Slack Notification (Success)
+      #   if: ${{ success() }}
+      #   run: |
+      #     curl -X POST -H 'Content-type: application/json' \
+      #       --data '{"text":"✅ Ansible collections built and synced successfully."}' \
+      #       ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # # Notify via Slack on Failure
+      # - name: Slack Notification (Failure)
+      #   if: ${{ failure() }}
+      #   run: |
+      #     curl -X POST -H 'Content-type: application/json' \
+      #       --data '{"text":"❌ Ansible collection build or sync failed."}' \
+      #       ${{ secrets.SLACK_WEBHOOK_URL }}

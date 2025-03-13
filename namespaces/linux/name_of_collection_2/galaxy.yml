@@ -1,0 +1,23 @@
+
+namespace: linux
+name: name_of_collection_2
+
+version: 1.0.2
+readme: README.md
+
+authors:
+  - Your Name <your.email@example.com>
+
+description: A brief description of your collection
+
+license:
+  - GPL-2.0-or-later
+
+tags: []
+
+dependencies: {}
+
+repository: http://example.com/repository
+documentation: http://docs.example.com
+homepage: http://example.com
+issues: http://example.com/issue/tracker

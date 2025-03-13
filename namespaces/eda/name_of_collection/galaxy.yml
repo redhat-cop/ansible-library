@@ -1,0 +1,23 @@
+
+namespace: eda
+name: name_of_collection
+
+version: 1.0.3
+readme: README.md
+
+authors:
+  - Alex Benavides
+
+description: A brief description of your collection
+
+license:
+  - GPL-2.0-or-later
+
+tags: []
+
+dependencies: {}
+
+repository: http://example.com/repository
+documentation: http://docs.example.com
+homepage: http://example.com
+issues: http://example.com/issue/tracker
