@@ -113,8 +113,13 @@ merge_staging_to_main:
     - apt-get update && apt-get install -y git
     - git config --global user.email "abenavid@redhat.com"
     - git config --global user.name "Alex Benavides"
-    - git remote -v
+    - rm -rf tmp_repo
+    - git clone https://$GITHUB_PAT@github.com/redhat-cop/ansible-library.git tmp_repo
+    - cd tmp_repo
+    - git remote add gitlab https://abenavid:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
     - git fetch --all
+    - git remote -v
+
     - git checkout main
     - echo "Merging staging into main..."
     - git merge --no-edit origin/staging || echo "No conflicts detected."
