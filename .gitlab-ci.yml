@@ -36,11 +36,14 @@ sync_from_github:
     - git diff --name-only --diff-filter=U  # Lists files with unresolved conflicts
     - echo "Please manually resolve any merge conflicts, commit the result, and then push."
     - git add .  # Add resolved files
-    - git commit -m "Resolved merge conflicts"
+    - git commit -m "Resolved merge conflicts" || echo "No changes to commit."
+
+    # Only push if there were changes to commit
+    - echo "Checking if push is needed..."
+    - git status
+    - git push --force gitlab main || echo "✅ No changes to push."
     
-    # Push changes to GitLab after resolving conflicts
-    - echo "Pushing GitHub repository into GitLab..."
-    - git push --force gitlab main
+    # Verify the remotes
     - git remote -v
   tags:
     - internal
