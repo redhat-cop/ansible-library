@@ -61,31 +61,6 @@ sync_to_github:
     - internal
     - pah
 
-# Sync Personal Branches to Staging
-sync_to_staging:
-  stage: sync
-  only:
-    - /^.*$/  # Runs on any branch except protected ones
-  except:
-    - main
-    - staging
-  script:
-    - apt-get update && apt-get install -y git
-    - git config --global user.email "abenavid@redhat.com"
-    - git config --global user.name "Alex Benavides"
-    - git remote -v
-    - git fetch --all
-    - git checkout -B staging origin/staging || git checkout -B staging
-    - echo "🔄 Merging current branch ($CI_COMMIT_REF_NAME) into staging..."
-    - git merge --no-edit origin/$CI_COMMIT_REF_NAME || echo "No conflicts detected."
-
-    # Ensure we push if merge was successful, even if fast-forwarded
-    - echo "🔍 Checking if push is needed..."
-    - git push --force gitlab staging || echo "✅ Staging already up to date."
-  tags:
-    - internal
-    - pah
-
 # Merge Staging to Main (Auto-merge)
 merge_staging_to_main:
   stage: merge
