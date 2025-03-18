@@ -87,4 +87,8 @@ If you have any questions, need assistance, or require a new namespace, please r
 | John Best      | jbest@redhat.com     |
 | Walter Bentley | wbentley@redhat.com  |
 
+<<<<<<< HEAD
 For general inquiries, you can also reach us via the **Slack**
+=======
+For general inquiries, you can also reach us via **Slack**
+>>>>>>> origin/main
