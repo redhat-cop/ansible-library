@@ -50,16 +50,13 @@ sync_to_github:
     - git remote -v
     - git checkout main || git checkout -B main origin/main
     - git fetch gitlab main || echo "GitLab main branch not found."
-    - git branch -r | grep "gitlab/main" && git merge --allow-unrelated-histories gitlab/main || echo "GitLab main branch does not exist, skipping merge."
-    - git checkout gitlab/main -- .gitlab-ci.yml || echo ".gitlab-ci.yml not found, skipping restore."
-    - git add .gitlab-ci.yml
-    - git commit -m "Preserve .gitlab-ci.yml after merge" || echo "No changes to commit."
-    - git gc --prune=now
-    - git repack -a -d --depth=250 --window=250
-    - git push --force --thin origin main
+    - git merge --squash gitlab/main || echo "No changes to merge from GitLab."
+    - git commit -m "Sync with GitLab main" || echo "No changes to commit."
+    - git push --force origin main
   tags:
     - internal
     - pah
+
 
 # Merge Staging to Main (Auto-merge)
 merge_staging_to_main:
