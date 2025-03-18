@@ -1,5 +1,0 @@
----
-# tasks file for secrets-manager-role
-- name: Debug role name (generic)
-  ansible.builtin.debug:
-    msg: "This is the {{ role_name }} role"

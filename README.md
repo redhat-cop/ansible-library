@@ -28,6 +28,11 @@ This document outlines the workflow for developing, reviewing, and deploying Ans
         version: 1.0.0 # If updating an existing collection please increment the version to not cause any breaks
         description: A brief description of the collection.
         ```
+    - Update my_namespace/my_collection/meta/runtime.yml
+        - Edit my_namespace/my_collection/meta/runtime.yml file and ensure you specify a minimum required ansible version to run the collection
+        ``` yaml
+        requires_ansible: '>=2.9.10'
+        ```
    - When ready, **push changes** (this automatically syncs the branch with `staging`).
         ```
         git add .
