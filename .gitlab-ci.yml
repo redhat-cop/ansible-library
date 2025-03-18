@@ -1,7 +1,7 @@
 stages:
   - sync
   - merge
-
+  
 # Sync from GitHub to GitLab (for `main`)
 sync_from_github:
   stage: sync
@@ -33,6 +33,7 @@ sync_from_github:
   tags:
     - internal
     - pah
+
 
 
 # Sync from GitLab `main` to GitHub (Keeps GitHub Updated)
