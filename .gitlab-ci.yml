@@ -1,11 +1,7 @@
 stages:
   - sync
   - merge
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> origin/main
 # Sync from GitHub to GitLab (for `main`)
 sync_from_github:
   stage: sync
@@ -16,11 +12,9 @@ sync_from_github:
     - git config --global user.email "abenavid@redhat.com"
     - git config --global user.name "Alex Benavides"
     - git remote -v
-<<<<<<< HEAD
     - git fetch --all
     - git checkout -B main github/main
     - git merge --allow-unrelated-histories origin/main || echo "No conflicts detected."
-=======
     - git remote add github https://github.com/redhat-cop/ansible-library.git
     - git fetch --all
     - git checkout -B main github/main || git checkout -B main origin/main
@@ -36,7 +30,6 @@ sync_from_github:
     # Add GitLab remote if not already set
     - git remote add gitlab https://gitlab-ci-token:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
     
->>>>>>> origin/main
     - echo "Pushing GitHub repository into GitLab..."
     - git push --force gitlab main
     - git remote -v
@@ -44,11 +37,7 @@ sync_from_github:
     - internal
     - pah
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> origin/main
 # Sync from GitLab `main` to GitHub (Keeps GitHub Updated)
 sync_to_github:
   stage: sync
@@ -116,8 +105,14 @@ merge_staging_to_main:
     - git checkout main
     - echo "Merging staging into main..."
     - git merge --no-edit origin/staging || echo "No conflicts detected."
+    
+    # Ensure that the gitlab remote URL is correct and uses the correct authentication token
+    - echo "Checking GitLab authentication..."
+    - git remote set-url gitlab https://gitlab-ci-token:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
     - echo "Pushing merged changes to main..."
     - git push gitlab main
+    
   tags:
     - internal
     - pah
+
