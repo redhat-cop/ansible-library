@@ -25,7 +25,7 @@ sync_from_github:
     - git commit -m "Resolved merge conflicts"
     
     # Add GitLab remote if not already set
-    - git remote add gitlab https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
+    - git remote add gitlab https://gitlab-ci-token:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
     
     - echo "Pushing GitHub repository into GitLab..."
     - git push --force gitlab main
