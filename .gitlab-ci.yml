@@ -12,8 +12,9 @@ sync_from_github:
     - git config --global user.email "abenavid@redhat.com"
     - git config --global user.name "Alex Benavides"
     - git remote -v
+    - git remote add github https://github.com/redhat-cop/ansible-library.git  # Add GitHub remote
     - git fetch --all
-    - git checkout -B main github/main
+    - git checkout -B main github/main || git checkout -B main origin/main  # Ensure main is checked out from github or origin
     - git merge --allow-unrelated-histories origin/main || echo "No conflicts detected."
     - echo "Pushing GitHub repository into GitLab..."
     - git push --force gitlab main
