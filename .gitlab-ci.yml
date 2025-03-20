@@ -75,37 +75,37 @@ sync_to_github:
     - pah
 
 
-# Merge Staging to Main (Auto-merge)
-merge_staging_to_main:
-  stage: merge
-  only:
-    - main
-  script:
-    - apt-get update && apt-get install -y git
-    - git config --global user.email "abenavid@redhat.com"
-    - git config --global user.name "Alex Benavides"
-    - rm -rf tmp_repo
-    - git clone https://$GITHUB_PAT@github.com/redhat-cop/ansible-library.git tmp_repo
-    - cd tmp_repo
-    - git remote add gitlab https://abenavid:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
-    - git fetch --all
-    - git remote -v
-    - git checkout main
+# # Merge Staging to Main (Auto-merge)
+# merge_staging_to_main:
+#   stage: merge
+#   only:
+#     - main
+#   script:
+#     - apt-get update && apt-get install -y git
+#     - git config --global user.email "abenavid@redhat.com"
+#     - git config --global user.name "Alex Benavides"
+#     - rm -rf tmp_repo
+#     - git clone https://$GITHUB_PAT@github.com/redhat-cop/ansible-library.git tmp_repo
+#     - cd tmp_repo
+#     - git remote add gitlab https://abenavid:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
+#     - git fetch --all
+#     - git remote -v
+#     - git checkout main
 
-    # Pull the latest changes from the remote main before merging
-    - echo "Pulling latest changes from GitLab main..."
-    - git pull gitlab main || echo "Failed to pull latest changes from GitLab."
+#     # Pull the latest changes from the remote main before merging
+#     - echo "Pulling latest changes from GitLab main..."
+#     - git pull gitlab main || echo "Failed to pull latest changes from GitLab."
 
-    # Merge staging into main
-    - echo "Merging staging into main..."
-    - git merge --no-edit origin/staging || echo "No conflicts detected."
+#     # Merge staging into main
+#     - echo "Merging staging into main..."
+#     - git merge --no-edit origin/staging || echo "No conflicts detected."
 
-    # Set up GitHub remote URL if not already present
-    - git remote get-url github || git remote add github https://github.com/redhat-cop/ansible-library.git
-    - echo "Checking GitLab authentication..."
-    - git remote set-url gitlab https://gitlab-ci-token:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
-    - echo "Pushing merged changes to main..."
-    - git push gitlab main
-  tags:
-    - internal
-    - pah
+#     # Set up GitHub remote URL if not already present
+#     - git remote get-url github || git remote add github https://github.com/redhat-cop/ansible-library.git
+#     - echo "Checking GitLab authentication..."
+#     - git remote set-url gitlab https://gitlab-ci-token:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
+#     - echo "Pushing merged changes to main..."
+#     - git push gitlab main
+#   tags:
+#     - internal
+#     - pah
