@@ -1,7 +1,7 @@
 stages:
+  - merge
   - sync_to_github
   - sync_from_github
-  - merge
 
 # Sync from GitHub to GitLab (for `main`)
 sync_from_github:
