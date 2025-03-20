@@ -13,7 +13,8 @@ sync_from_github:
     - git config --global user.name "Alex Benavides"
     - git remote -v
     - git remote get-url gitlab || git remote add gitlab https://gitlab-ci-token:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
-    - git fetch --all
+    - echo "Checking GitLab authentication..."
+    - git fetch --all || (echo "Authentication failed with GitLab. Check token."; exit 1)
     - git checkout -B main github/main
     - git merge --allow-unrelated-histories origin/main || echo "No conflicts detected."
     - git remote get-url github || git remote add github https://github.com/redhat-cop/ansible-library.git
@@ -32,6 +33,7 @@ sync_from_github:
   tags:
     - internal
     - pah
+
 
 # Sync from GitLab `main` to GitHub (Keeps GitHub Updated)
 sync_to_github:
