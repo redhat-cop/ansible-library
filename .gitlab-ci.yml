@@ -18,14 +18,16 @@ sync_to_github:
     - git remote -v
     - git checkout main || git checkout -B main origin/main
     - git fetch gitlab main || echo "GitLab main branch not found."
-    - git merge --squash gitlab/main || echo "No changes to merge from GitLab."
+
+    # Resolve merge conflicts by favoring GitLab changes
+    - git merge -X theirs gitlab/main || echo "No changes to merge from GitLab."
+    
     - git commit -m "Sync with GitLab main" || echo "No changes to commit."
     - git push --force origin main
   tags:
     - internal
     - pah
-
-
+  
 # # Merge Staging to Main (Auto-merge)
 # merge_staging_to_main:
 #   stage: merge
