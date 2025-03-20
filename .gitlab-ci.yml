@@ -11,6 +11,21 @@ sync_from_and_to_github:
     - git config --global user.email "abenavid@redhat.com"
     - git config --global user.name "Alex Benavides"
     
+        
+    # Sync from GitLab to GitHub
+    - echo "Syncing from GitLab to GitHub..."
+    - rm -rf tmp_repo
+    - git clone https://$GITHUB_PAT@github.com/redhat-cop/ansible-library.git tmp_repo
+    - cd tmp_repo
+    - git remote add gitlab https://abenavid:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
+    - git fetch --all
+    - git remote -v
+    - git checkout main || git checkout -B main origin/main
+    - git fetch gitlab main || echo "GitLab main branch not found."
+    - git merge --squash gitlab/main || echo "No changes to merge from GitLab."
+    - git commit -m "Sync with GitLab main" || echo "No changes to commit."
+    - git push --force origin main
+
     # Sync from GitHub to GitLab
     - echo "Syncing from GitHub to GitLab..."
     - git remote -v
@@ -46,20 +61,6 @@ sync_from_and_to_github:
     - git status
     - git push --force gitlab main || echo "✅ No changes to push."
     - git remote -v
-    
-    # Sync from GitLab to GitHub
-    - echo "Syncing from GitLab to GitHub..."
-    - rm -rf tmp_repo
-    - git clone https://$GITHUB_PAT@github.com/redhat-cop/ansible-library.git tmp_repo
-    - cd tmp_repo
-    - git remote add gitlab https://abenavid:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
-    - git fetch --all
-    - git remote -v
-    - git checkout main || git checkout -B main origin/main
-    - git fetch gitlab main || echo "GitLab main branch not found."
-    - git merge --squash gitlab/main || echo "No changes to merge from GitLab."
-    - git commit -m "Sync with GitLab main" || echo "No changes to commit."
-    - git push --force origin main
   tags:
     - internal
     - pah
