@@ -1,10 +1,11 @@
 stages:
-  - sync
+  - sync_to_github
+  - sync_from_github
   - merge
 
 # Sync from GitHub to GitLab (for `main`)
 sync_from_github:
-  stage: sync
+  stage: sync_from_github
   only:
     - main
   script:
@@ -51,7 +52,7 @@ sync_from_github:
 
 # Sync from GitLab `main` to GitHub (Keeps GitHub Updated)
 sync_to_github:
-  stage: sync
+  stage: sync_to_github
   only:
     - main
   script:
