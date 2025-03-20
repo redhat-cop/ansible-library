@@ -14,7 +14,21 @@ sync_from_github:
     - git remote -v
     - git remote get-url gitlab || git remote add gitlab https://gitlab-ci-token:$GITLAB_PAT@gitlab.consulting.redhat.com/internal-ansible-library/ansible-library.git
     - echo "Checking GitLab authentication..."
-    - git fetch --all || (echo "Authentication failed with GitLab. Check token."; exit 1)
+    
+    # Retry logic for git fetch
+    - |
+      attempt=0
+      max_attempts=5
+      until git fetch --all || [ $attempt -eq $max_attempts ]; do
+        echo "Attempt $((attempt+1)) failed, retrying..."
+        attempt=$((attempt+1))
+        sleep 5
+      done
+      if [ $attempt -eq $max_attempts ]; then
+        echo "Authentication failed with GitLab after $max_attempts attempts. Check token."
+        exit 1
+      fi
+      
     - git checkout -B main github/main
     - git merge --allow-unrelated-histories origin/main || echo "No conflicts detected."
     - git remote get-url github || git remote add github https://github.com/redhat-cop/ansible-library.git
