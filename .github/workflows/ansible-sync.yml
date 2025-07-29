@@ -147,7 +147,9 @@ jobs:
               echo "📦 Publishing $TAR_FILE"
               ansible-galaxy collection publish "$TAR_FILE" \
                 --server https://platform.cus-l3n9so.aws.ansiblecloud.redhat.com/api/galaxy/ \
-                --api-key "$ANSIBLE_GALAXY_TOKEN" || echo "⚠️ Collection published, but import status check failed — ignoring"
+                --api-key "$ANSIBLE_GALAXY_TOKEN"
+                --no-wait
+                -vvv
             else
               echo "❌ ERROR: No .tar.gz file found in $collection_path"
               exit 1
