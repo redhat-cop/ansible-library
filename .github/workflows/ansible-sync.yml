@@ -117,12 +117,10 @@ jobs:
           ANSIBLE_GALAXY_TOKEN: ${{ secrets.PAH_API_KEY }}
         run: |
           for collection_path in namespaces/*/*; do
-            # Skip if not a directory
             if [ ! -d "$collection_path" ]; then
               continue
             fi
           
-            # Skip if no galaxy.yml (not a valid collection)
             if [ ! -f "$collection_path/galaxy.yml" ]; then
               echo "⏭️ Skipping $collection_path — no galaxy.yml"
               continue
@@ -133,27 +131,28 @@ jobs:
           
             echo "🚀 Processing collection: $namespace/$collection_name"
           
-            # Build the collection
-            ansible-galaxy collection build "$collection_path" \
-              --output-path "$collection_path" --force || {
-                echo "❌ Failed to build collection at $collection_path"
-                exit 1
-            }
+            # Try building
+            if ! ansible-galaxy collection build "$collection_path" \
+                --output-path "$collection_path" --force; then
+              echo "❌ Failed to build collection: $namespace/$collection_name. Skipping."
+              continue
+            fi
           
-            # Find the generated tar file
+            # Try publishing
             TAR_FILE=$(find "$collection_path" -maxdepth 1 -name '*.tar.gz' | head -n 1)
           
             if [ -f "$TAR_FILE" ]; then
               echo "📦 Publishing $TAR_FILE"
-              ansible-galaxy collection publish "$TAR_FILE" \
-                --server https://platform.cus-l3n9so.aws.ansiblecloud.redhat.com/api/galaxy/ \
-                --api-key "$ANSIBLE_GALAXY_TOKEN" \
-                --no-wait \
-                -vvv
+              if ! ansible-galaxy collection publish "$TAR_FILE" \
+                  --server https://platform.cus-l3n9so.aws.ansiblecloud.redhat.com/api/galaxy/ \
+                  --api-key "$ANSIBLE_GALAXY_TOKEN" \
+                  --no-wait -vvv; then
+                echo "⚠️ Failed to publish $TAR_FILE — continuing with next collection."
+                continue
+              fi
             else
-              echo "❌ ERROR: No .tar.gz file found in $collection_path"
-              exit 1
+              echo "❌ ERROR: No .tar.gz file found in $collection_path — skipping."
+              continue
             fi
           done
-          
           
