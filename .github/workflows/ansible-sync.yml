@@ -114,7 +114,7 @@ jobs:
 
       - name: Build and Publish Collections
         env:
-          ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
+          ANSIBLE_GALAXY_TOKEN: ${{ secrets.PAH_API_KEY }}
         run: |
           for collection_path in namespaces/*/*; do
             # Skip if not a directory
@@ -147,7 +147,7 @@ jobs:
               echo "📦 Publishing $TAR_FILE"
               ansible-galaxy collection publish "$TAR_FILE" \
                 --server https://platform.cus-l3n9so.aws.ansiblecloud.redhat.com/api/galaxy/ \
-                --api-key ${{ secrets.PAH_API_KEY }}
+                --api-key "$ANSIBLE_GALAXY_TOKEN"
             else
               echo "❌ ERROR: No .tar.gz file found in $collection_path"
               exit 1
