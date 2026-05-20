@@ -2,7 +2,7 @@
 
 This document outlines the workflow for developing, reviewing, and deploying Ansible collections within Red Hat’s internal Ansible Library.
 
-## 🚀 Workflow Overview
+## Workflow Overview
 
 1. **Consultant Creates a Personal Branch and Develops a Collection**  
    - Consultant creates a **personal branch** off of `staging`.
@@ -63,7 +63,7 @@ This document outlines the workflow for developing, reviewing, and deploying Ans
 
 ---
 
-## 🔄 CI/CD Automation Breakdown
+## CI/CD Automation Breakdown
 
 | Step | Trigger | Action |
 |------|---------|--------|
@@ -75,14 +75,14 @@ This document outlines the workflow for developing, reviewing, and deploying Ans
 
 ---
 
-## 🔧 Future Enhancements
+## Future Enhancements
 - Add **Ansible-linter** for code validation before syncing to `staging`.
 - Implement a **customer data scrubber** to prevent sensitive information in collections.
 - Introduce **Slack notification alerts** when collections are ready for review in Automation Hub.
 
 ---
 
-## 📞 Contact Us
+## Contact Us
 
 If you have any questions, need assistance, or require a new namespace, please reach out to the **Ansible Library Admins**:
 
